@@ -135,7 +135,7 @@ class Data_Set(Dataset):
 
 
 def main():
-    data_set = Data_Set('./data/ped2/training/frames', resize_height=352, resize_width=352, time_steps=3, mode='train')
+    data_set = Data_Set('../data/ped2/training/frames', resize_height=352, resize_width=352, time_steps=3, mode='train')
     # data_set = Data_Set('./Data/ShanghaiTechDataset/testing/frames', resize_height=352, resize_width=352, time_steps=3, mode='test')
     print('done！')
     print('共拥有的剪辑个数为：')
