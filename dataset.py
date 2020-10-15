@@ -11,14 +11,13 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 class Data_Set(Dataset):
-    def __init__(self, video_folder, resize_height=256, resize_width=256, time_steps=3, mode='train'):
+    def __init__(self, video_folder, resize_height=256, resize_width=256, time_steps=3):
         super(Data_Set, self).__init__()
 
         self.dir = video_folder
         self.videos = OrderedDict()
         self._resize_height = resize_height
         self._resize_width = resize_width
-        self.mode = mode
         # 定义要剪取的帧的长度
         self.time_steps = time_steps
         # 进行视频信息提取
@@ -85,62 +84,36 @@ class Data_Set(Dataset):
 
     def __getitem__(self, idx):
         image_path_list = self.video_seg_list[idx]
-        if self.mode == 'train':
-            # 定义处理器
-            tf = transforms.Compose([
-                lambda x: Image.open(x).convert('RGB'),  # string path= > image data
-                transforms.Resize((self._resize_height, self._resize_width)),
-                transforms.ToTensor()
-                # transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                #                      std=[0.229, 0.224, 0.225])
-            ])
+        # 定义处理器
+        tf = transforms.Compose([
+            lambda x: Image.open(x).convert('RGB'),  # string path= > image data
+            transforms.Resize((self._resize_height, self._resize_width)),
+            transforms.ToTensor()
+            # transforms.Normalize(mean=[0.485, 0.456, 0.406],
+            #                      std=[0.229, 0.224, 0.225])
+        ])
 
-            image = []
-            # 循环读取当前剪辑中的图片
-            for img_path in image_path_list:
-                img_sub = tf(img_path)
-                image.append(img_sub)
-                # print(img_sub.shape)
-            # image_clip = torch.cat(image, dim=0)
-            # image_clip = image_path_list
-            # 返回的是一个tensor，shape为[time_steps=4*2, 256, 256]
-            # 再把image_clip变为[channel, Depth, H, W]的形式，方便用DataLoader包装后变成[batch, channel, Depth, H, W]
-            # image_clip = image_clip.unsqueeze(0)
-            return image[0], image[1], image[2], 0.5  # 返回的是 I_0, I_t, I_1, t
-        else :
-
-
-            # 定义处理器
-            tf = transforms.Compose([
-                lambda x: Image.open(x).convert('RGB'),  # string path= > image data
-                transforms.Resize((self._resize_height, self._resize_width)),
-                transforms.ToTensor()
-                # transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                #                      std=[0.229, 0.224, 0.225])
-            ])
-
-            image = []
-            # 循环读取当前剪辑中的图片
-            for img_path in image_path_list:
-                img_sub = tf(img_path)
-                image.append(img_sub)
-                # print(img_sub.shape)
-            # image_clip = torch.cat(image, dim=0)
-            # image_clip = image_path_list
-            # 返回的是一个tensor，shape为[time_steps=4*2, 256, 256]
-            # 再把image_clip变为[channel, Depth, H, W]的形式，方便用DataLoader包装后变成[batch, channel, Depth, H, W]
-            # image_clip = image_clip.unsqueeze(0)
-            return image[0], image[1], image[2]   # 返回的是 I_0, I_t, I_1
+        image = []
+        # 循环读取当前剪辑中的图片
+        for img_path in image_path_list:
+            img_sub = tf(img_path)
+            image.append(img_sub)
+            # print(img_sub.shape)
+        # image_clip = torch.cat(image, dim=0)
+        # image_clip = image_path_list
+        # 返回的是一个tensor，shape为[time_steps=4*2, 256, 256]
+        # 再把image_clip变为[channel, Depth, H, W]的形式，方便用DataLoader包装后变成[batch, channel, Depth, H, W]
+        # image_clip = image_clip.unsqueeze(0)
+        return image[0], image[1], image[2], 0.5  # 返回的是 I_0, I_t, I_1, t
 
 
 
 def main():
-    data_set = Data_Set('../data/ped2/training/frames', resize_height=352, resize_width=352, time_steps=3, mode='train')
-    # data_set = Data_Set('./Data/ShanghaiTechDataset/testing/frames', resize_height=352, resize_width=352, time_steps=3, mode='test')
+    data_set = Data_Set('../data/ped2/training/frames', resize_height=360, resize_width=360, time_steps=3)
     print('done！')
     print('共拥有的剪辑个数为：')
     print(data_set.__len__())
-    # 共2054个
+    # 共  个
 
     I_0, I_t, I_1, t = data_set.__getitem__(0)
     # I_0, I_1 = data_set.__getitem__(0)
