@@ -109,15 +109,15 @@ class Data_Set(Dataset):
 
 
 def main():
-    data_set = Data_Set('../data/ped2/training/frames', resize_height=360, resize_width=360, time_steps=3)
+    data_set = Data_Set('../data/ped2/training/frames', resize_height=360, resize_width=360, time_steps=5)
     print('done！')
     print('共拥有的剪辑个数为：')
     print(data_set.__len__())
     # 共  个
 
-    I_0, I_t, I_1, t = data_set.__getitem__(0)
+    I_0, I_t, I_1, t = data_set.__getitem__(0)  # I_0 size is [3,360,360]
     # I_0, I_1 = data_set.__getitem__(0)
-    print(I_0)
+    #  print(I_0)
     # print(image_clip)
     # print(image_clip.shape)
     # print(image_clip.max())
@@ -135,9 +135,10 @@ def main():
 
 
     # 测试用装载数据
-    train_loader = DataLoader(data_set, batch_size=12, shuffle=True, num_workers=4)
-    # x = next(iter(train_loader))
-    # print(x.shape)
+    train_loader = DataLoader(data_set, batch_size=12, shuffle=True, num_workers=32)
+    x = next(iter(train_loader))
+    #  print(x.shape)
+    print('done')
     # x_pre, x_later = x.chunk(2, dim=2)
 
     # print(x_pre.shape)
