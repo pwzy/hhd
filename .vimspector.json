@@ -5,9 +5,7 @@
       "configuration": {
         "request": "launch",
         "program": "${file}",
-        "externalConsole": true, 
-        "MIMode": "lldb",
-        "args": [ "*${args}" ]
+        "externalConsole": true 
       }
     }
   }
