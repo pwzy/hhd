@@ -98,6 +98,6 @@ gcn_Module = GCN_Module()
 
 graph_boxes_features, relation_graph = gcn_Module(boxes_features, boxes_positions)
 
-print('dd')
+print('done!')
 
 
