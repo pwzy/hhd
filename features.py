@@ -22,7 +22,7 @@ def main():
     #  resnet50 = models.resnet50(pretrained=True, progress=True)
     #  resnet50.eval()
     #  image_feature = resnet50(x[0]) # this size is [2,1000]
-    #  print('test')
+    print('test')
 
     # prepare net 
     # TODO
