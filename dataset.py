@@ -104,7 +104,7 @@ class Data_Set(Dataset):
         # 返回的是一个tensor，shape为[time_steps=4*2, 256, 256]
         # 再把image_clip变为[channel, Depth, H, W]的形式，方便用DataLoader包装后变成[batch, channel, Depth, H, W]
         # image_clip = image_clip.unsqueeze(0)
-        return image[0], image[1], image[2], 0.5  # 返回的是 I_0, I_t, I_1, t
+        return image
 
 
 
@@ -115,7 +115,8 @@ def main():
     print(data_set.__len__())
     # 共  个
 
-    I_0, I_t, I_1, t = data_set.__getitem__(0)  # I_0 size is [3,360,360]
+    image = data_set.__getitem__(0)  # I_0 size is [3,360,360]
+    #  print(len(image))
     # I_0, I_1 = data_set.__getitem__(0)
     #  print(I_0)
     # print(image_clip)
