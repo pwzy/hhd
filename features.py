@@ -30,10 +30,8 @@ def main():
     for epoch in range(10):
         for batchidx, image in enumerate(train_loader, 0):
 
-            image = image.to(device)
-
             # 进行图像的堆叠，一次过网络，5个[batch,3,360,360] => [batch*5,3,360,360]
-            image = torch.cat([image[i] for i in range(image_num)], dim=0) 
+            image = torch.cat([image[i].to(device) for i in range(image_num)], dim=0) 
             #  print(image.shape)
             # 获得图像特征 大小为[batch*5, 1000]
             image_features = model_backbone(image)  # [10,3,360,360]
@@ -48,12 +46,12 @@ def main():
                 I2 = image_features[2][batch_clip].unsqueeze(0)
                 I3 = image_features[3][batch_clip].unsqueeze(0)
                 I4 = image_features[4][batch_clip].unsqueeze(0)
-                # I.shape is [1, l, 1000]  
+                # I.shape is [1, 5, 1000]  
                 I = torch.stack([I0, I1, I2, I3, I4], dim=1)
 
-
-                #  print(I.shape)
                 print("data prepare done~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+                output_features, relation_graph = model_gcn(I)
 
 
 
