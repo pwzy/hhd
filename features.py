@@ -32,20 +32,26 @@ def main():
             image = torch.cat([image[i] for i in range(image_num)], dim=0) 
             #  print(image.shape)
             # 获得图像特征 大小为[batch*5, 1000]
-            image_features = model_backbone(image) 
+            image_features = model_backbone(image)  # [10,3,360,360]
             #  print(image_features.shape)
-            # 将每一张图片的特征分开，形成列表 image_features = [[batch_size,000],[batch_size,1000],[batch_size,1000],...5次]
+            # 将每一张图片的特征分开，形成列表 image_features = [[batch_size,1000],[batch_size,1000],[batch_size,1000],...5次]
             image_features = [image_features[i*batch_size : i*batch_size+1] for i in range(image_num)]
             #  print(len(image_features))
             # 遍历batch
+            for batch_clip in range(batch_size):
+                I0 = image_features[0][batch_clip].unsqueeze(0)
+                I1 = image_features[1][batch_clip].unsqueeze(0)
+                I2 = image_features[2][batch_clip].unsqueeze(0)
+                I3 = image_features[3][batch_clip].unsqueeze(0)
+                I4 = image_features[4][batch_clip].unsqueeze(0)
+
+                I = torch.stack([I0, I1, I2, I3, I4], dim=0)
 
 
-            
+                #  print(I.shape)
+                #  print(I.shape)
+                print("done~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-
-
-
-        
 
     #  iterator = iter(train_loader)
     #  #  x is a list which contains [I0, I1, I2, I3, I4]
