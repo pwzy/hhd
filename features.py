@@ -35,8 +35,6 @@ def main():
             print(len(image_features))
 
 
-
-
         
 
     #  iterator = iter(train_loader)
