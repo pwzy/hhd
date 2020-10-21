@@ -15,15 +15,17 @@ class GCN_Module(nn.Module):
         # self.cfg = cfg
 
         # NFR = cfg.num_features_relation  # 256
+        # 图的特征的个数
         NFR = 256  # 256
 
         # NG = cfg.num_graph  # 4
         # N = cfg.num_boxes  # 13
         # T = cfg.num_frames  # 10
-        NG, N, T = 4, 13, 10
+        NG, N, T = 4, 13, 10 # 分别为新建的图的个数，box的数量，帧的数量
 
         # NFG = cfg.num_features_gcn  # 1024
         # NFG_ONE = NFG  # 1024
+        # 为初始的box的特征数
         NFG = 1024
         NFG_ONE = 1024
 
@@ -107,13 +109,15 @@ class GCN_Module(nn.Module):
 # boxes_features = ([1, 15, 1024])
 # boxes_positions = [15,4]
 
-boxes_features = torch.randn(1,15,1024)
-boxes_positions = torch.randn(15,4)
+if __name__ == "__main__":
+        
+    boxes_features = torch.randn(1,15,1024)
+    boxes_positions = torch.randn(15,4)
 
-gcn_Module = GCN_Module()
+    gcn_Module = GCN_Module()
 
-graph_boxes_features, relation_graph = gcn_Module(boxes_features, boxes_positions)
+    graph_boxes_features, relation_graph = gcn_Module(boxes_features, boxes_positions)
 
-print('dd')
+    print('dd')
 
 

@@ -7,6 +7,7 @@ from PIL import Image
 import os
 import numpy as np
 from dataset import *
+from gcn_model import GCN_Module
 
 def main():
 
@@ -18,8 +19,11 @@ def main():
 
     data_set = Data_Set('../data/ped2/training/frames', resize_height=360, resize_width=360, time_steps=5)
     train_loader = DataLoader(data_set, batch_size=batch_size, shuffle=True, num_workers=32)
-
+    
+    # import backbone model
     model_backbone = models.resnet50(pretrained=True, progress=True)
+    # import gcn model 
+    model_gcn = GCN_Module()
     
     for epoch in range(10):
         for batchidx, image in enumerate(train_loader, 0):
@@ -32,7 +36,13 @@ def main():
             #  print(image_features.shape)
             # 将每一张图片的特征分开，形成列表 image_features = [[batch_size,000],[batch_size,1000],[batch_size,1000],...5次]
             image_features = [image_features[i*batch_size : i*batch_size+1] for i in range(image_num)]
-            print(len(image_features))
+            #  print(len(image_features))
+            # 遍历batch
+
+
+            
+
+
 
 
         

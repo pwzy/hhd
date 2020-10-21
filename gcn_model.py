@@ -21,23 +21,23 @@ class GCN_Module(nn.Module):
         # NG = cfg.num_graph  # 4
         # N = cfg.num_boxes  # 13
         # T = cfg.num_frames  # 10
-        NG, N, T = 4, 13, 10 # 分别为新建的图的个数，box的数量，帧的数量
+        #  NG, N, T = 4, 13, 10 # 分别为新建的图的个数，box的数量，帧的数量
+        NG = 4
 
         # NFG = cfg.num_features_gcn  # 1024
         # NFG_ONE = NFG  # 1024
         # 为初始的box的特征数
-        NFG = 1024
-        NFG_ONE = 1024
+        NFG = 1000
+        NFG_ONE = 1000
 
         self.fc_rn_theta_list = torch.nn.ModuleList([nn.Linear(NFG, NFR) for i in range(NG)])
         self.fc_rn_phi_list = torch.nn.ModuleList([nn.Linear(NFG, NFR) for i in range(NG)])
 
         self.fc_gcn_list = torch.nn.ModuleList([nn.Linear(NFG, NFG_ONE, bias=False) for i in range(NG)])
 
-
         self.nl_gcn_list = torch.nn.ModuleList([nn.LayerNorm([NFG_ONE]) for i in range(NG)])
 
-    def forward(self, graph_boxes_features, boxes_in_flat):
+    def forward(self, graph_boxes_features):
         """
         graph_boxes_features  [B*T,N,NFG]
         """
@@ -45,7 +45,7 @@ class GCN_Module(nn.Module):
         # GCN graph modeling
         # Prepare boxes similarity relation
         # B, N, NFG = graph_boxes_features.shape  # 1 15 1024
-        B, N, NFG = 1,15,1024
+        B, N, NFG = 1,5,1000
         # NFR = self.cfg.num_features_relation  # 256
         NFR = 256
         # NG = self.cfg.num_graph  # 4
@@ -53,20 +53,20 @@ class GCN_Module(nn.Module):
         NFG_ONE = NFG  # 1024
 
         # OH, OW = self.cfg.out_size  # 57, 87
-        OH, OW = 57,87
+        #  OH, OW = 57,87
         # pos_threshold = self.cfg.pos_threshold  # 0.2
-        pos_threshold = 0.2
+        #  pos_threshold = 0.2
 
         # Prepare position mask
-        graph_boxes_positions = boxes_in_flat  # B*T*N, 4  [15,4]
-        graph_boxes_positions[:, 0] = (graph_boxes_positions[:, 0] + graph_boxes_positions[:, 2]) / 2
-        graph_boxes_positions[:, 1] = (graph_boxes_positions[:, 1] + graph_boxes_positions[:, 3]) / 2
-        graph_boxes_positions = graph_boxes_positions[:, :2].reshape(B, N, 2)  # B*T, N, 2  [1, 15 ,2]
+        #  graph_boxes_positions = boxes_in_flat  # B*T*N, 4  [15,4]
+        #  graph_boxes_positions[:, 0] = (graph_boxes_positions[:, 0] + graph_boxes_positions[:, 2]) / 2
+        #  graph_boxes_positions[:, 1] = (graph_boxes_positions[:, 1] + graph_boxes_positions[:, 3]) / 2
+        #  graph_boxes_positions = graph_boxes_positions[:, :2].reshape(B, N, 2)  # B*T, N, 2  [1, 15 ,2]
 
-        graph_boxes_distances = calc_pairwise_distance_3d(graph_boxes_positions,
-                                                          graph_boxes_positions)  # B, N, N  [1, 15 ,15]
-
-        position_mask = (graph_boxes_distances > (pos_threshold * OW))  # [1, 15 ,15]  is bool value
+        #  graph_boxes_distances = calc_pairwise_distance_3d(graph_boxes_positions,
+        #                                                    graph_boxes_positions)  # B, N, N  [1, 15 ,15]
+        #
+        #  position_mask = (graph_boxes_distances > (pos_threshold * OW))  # [1, 15 ,15]  is bool value
 
         relation_graph = None
         graph_boxes_features_list = []
@@ -88,8 +88,8 @@ class GCN_Module(nn.Module):
             relation_graph = similarity_relation_graph
 
             relation_graph = relation_graph.reshape(B, N, N)  # ([1, 15, 15])
-
-            relation_graph[position_mask] = -float('inf')
+            # 关闭position_mask
+            #  relation_graph[position_mask] = -float('inf')
 
             relation_graph = torch.softmax(relation_graph, dim=2)  # ([1, 15, 15])
 
@@ -109,13 +109,15 @@ class GCN_Module(nn.Module):
 # boxes_features = ([1, 15, 1024])
 # boxes_positions = [15,4]
 
-boxes_features = torch.randn(1,15,1024)
-boxes_positions = torch.randn(15,4)
+if __name__ == "__main__":
+        
+    boxes_features = torch.randn(1,5,1000)
+    #  boxes_positions = torch.randn(5,4)
 
-gcn_Module = GCN_Module()
+    gcn_Module = GCN_Module()
 
-graph_boxes_features, relation_graph = gcn_Module(boxes_features, boxes_positions)
+    graph_boxes_features, relation_graph = gcn_Module(boxes_features)
 
-print('dd')
+    print('done!')
 
 
