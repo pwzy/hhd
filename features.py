@@ -1,7 +1,6 @@
 
 # 提取图片的特征
 import torch
-from torch import device
 import torchvision.models as models
 import torchvision.transforms as transforms
 from PIL import Image
@@ -17,11 +16,20 @@ def main():
     train_loader = DataLoader(data_set, batch_size=2, shuffle=True, num_workers=32)
 
 
-    #  iterator = iter(train_loader)
-    #  x = next(iterator)
-    #  resnet50 = models.resnet50(pretrained=True, progress=True)
-    #  resnet50.eval()
-    #  image_feature = resnet50(x[0]) # this size is [2,1000]
+    iterator = iter(train_loader)
+    # x is a list which contains [I0, I1, I2, I3, I4]
+    x = next(iterator)
+    print(len(x))
+
+    # import resnet50 model
+    resnet50 = models.resnet50(pretrained=True, progress=True)
+    resnet50.eval()
+    
+    
+    
+    image_feature = resnet50(x[0]) # this size is [2,1000]
+
+    print(device)
     print('test')
 
     # prepare net 
