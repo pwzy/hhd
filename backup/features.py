@@ -16,21 +16,6 @@ def main():
     batch_size = 2
     train_loader = DataLoader(data_set, batch_size=batch_size, shuffle=True, num_workers=32)
 
-    model_backbone = models.resnet50(pretrained=True, progress=True)
-    
-    for epoch in range(10):
-        for batchidx, image in enumerate(train_loader, 0):
-
-            # 进行图像的堆叠，一次过网络，5个[batch,3,360,360] => [batch*5,3,360,360]
-            image = torch.cat([image[i] for i in range(5)], dim=0) 
-            #  print(image.shape)
-            # 获得图像特征 大小为[batch*5, 1000]
-            image_features = model_backbone(image) 
-            print(image_features.shape)
-            # 将每一张图片特征分开
-
-
-        
 
     #  iterator = iter(train_loader)
     #  #  x is a list which contains [I0, I1, I2, I3, I4]
