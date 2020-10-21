@@ -40,6 +40,10 @@ def main():
             image_features = [image_features[i*batch_size : i*batch_size+2] for i in range(image_num)]
             #  print(len(image_features))
             # 遍历batch
+            
+            # 定义output记录图的输出
+            output = []
+
             for batch_clip in range(batch_size):
                 I0 = image_features[0][batch_clip].unsqueeze(0)
                 I1 = image_features[1][batch_clip].unsqueeze(0)
@@ -49,9 +53,18 @@ def main():
                 # I.shape is [1, 5, 1000]  
                 I = torch.stack([I0, I1, I2, I3, I4], dim=1)
 
-                print("data prepare done~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                if batchidx % 100 == 0:
+                    if batch_clip == 0:
+                        # 遍历几次batch就输出几次，加上判断屏蔽这种情况
+                        print("data prepare done~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                        print("epoch: %d , batchidx: %d" % (epoch, batchidx))
 
                 output_features, relation_graph = model_gcn(I)
+
+                output.append(output_features)
+
+            # 现在获得了图卷积层的输出特征output， 将他们堆积起来用于聚类（deepclustering）
+
 
 
 
