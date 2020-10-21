@@ -28,6 +28,7 @@ def main():
             image_features = model_backbone(image) 
             print(image_features.shape)
             # 将每一张图片特征分开
+            image_features = 
 
 
         
