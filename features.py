@@ -37,7 +37,7 @@ def main():
             image_features = model_backbone(image)  # [10,3,360,360]
             #  print(image_features.shape)
             # 将每一张图片的特征分开，形成列表 image_features = [[batch_size,1000],[batch_size,1000],[batch_size,1000],...5次]
-            image_features = [image_features[i*batch_size : i*batch_size+1] for i in range(image_num)]
+            image_features = [image_features[i*batch_size : i*batch_size+2] for i in range(image_num)]
             #  print(len(image_features))
             # 遍历batch
             for batch_clip in range(batch_size):
